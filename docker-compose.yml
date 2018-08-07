@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  web:
+    image: 'avkosme/django'
+    privileged: true
+    command: python3.7 manage.py runserver 0.0.0.0:80
+    working_dir: /opt/webapp/web
+    ports:
+      - 80:80
+    volumes: 
+      - .:/opt/webapp
+
+  postgres:
+    image: 'avkosme/postgresql'
+    privileged: true
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/pgsql/10/data/
+
+volumes:
+  postgres:
+    driver: local
