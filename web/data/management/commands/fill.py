@@ -24,11 +24,19 @@ class Fill():
     def __init__(self):
         self.data = False
         self.ufms = False
+        self.len = False
+        self.count = 0
 
     def main(self):
-        datas = d6168077734.objects.all()[0:20000]
+        datas = d6168077734.objects.all()
         for self.data in datas:
-            self.search()
+            self.len_bad_pass_issued()
+        print(self.count)
+
+    def len_bad_pass_issued(self):
+        self.len = len(self.data.pass_issued.split(' '))
+        if self.len < 3:
+            self.count = self.count + 1
 
     def search(self):
         try:
