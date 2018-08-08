@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand, CommandError
-from lxml import html
-import requests
-from ufms.models import Ufms
+import csv
+from data.models import d4826085213, d6162070130, d6168077734
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Import data from csv files'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -14,79 +13,36 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options.get('action'):
-            if options.get('action') == 'parse':
+            if options.get('action') == 'import':
                 self.stdout.write('Started')
-                parser = Parser()
+                parser = Data()
                 parser.main()
                 self.stdout.write('Finished')
 
 
-class Parser:
-    ROOT_URL = 'http://ufms-rossii-gov.ru'
-
+class Data:
     def __init__(self):
-        self.write = False
-        self.file = False
-
-        self.name = False
-        self.number = False
+        self.data = False
 
     def main(self):
-        page = requests.get(Parser.ROOT_URL + '/spravochnik-kodov-ufms-rossii/')
-        tree = html.fromstring(page.content)
-        areas = tree.xpath('/html/body/div[1]/div/div[1]/div/article/div/ul//a/@href')
+        with open('media/6168077734.csv', newline='\n') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=';', quotechar='\n')
 
-        if self.write:
-            self.file = open('out.csv', 'w')
+            for row in spamreader:
+                self.data = row
+                self.set_attributes()
 
-        for area in areas:
-            if self.write:
-                self.file.write(self.get_codes(area))
-            else:
-                self.get_codes(area)
-        if self.write:
-            self.file.close()
-
-    def get_codes(self, url):
-        page = requests.get(Parser.ROOT_URL + url)
-        tree = html.fromstring(page.content)
-
-        code = tree.xpath('/html/body/div[1]/div/div[1]/div/article/div/table/tbody/tr[2]/td[1]/text()')
-        area = tree.xpath('/html/body/div[1]/div/div[1]/div/article/div/table/tbody/tr[2]/td[2]/text()')
-
-        codes = tree.xpath('/html/body/div[1]/div/div[1]/div/article/div/table/tbody/tr//text()')
-
-        self.file = open('media/out.csv', "a")
-
-        # codes = map(lambda s: s.strip(), codes)
-
-        codes = [x for x in codes if x != '\n']
-        codes = [x for x in codes if x != 'Кем выдан\n']
-        codes = [x for x in codes if x != 'Код подразделения\n']
-
-        for key, code in enumerate(codes):
-
-            if key % 2 == 0 and code:
-                self.name = code
-                self.name = code
-                self.name = self.name.replace("\n", "")
-                self.name = self.name.strip()
-            else:
-                self.number = code
-                self.number = self.number.replace("\n", "")
-                self.number = self.number.strip()
-
-            print(self.name)
-            print(self.number)
-            if self.name and self.number:
-                self.save(name=self.name, number=self.number)
-
-    def save(self, name, number):
-        try:
-            print(name, number)
-            ufms = Ufms()
-            ufms.name = name
-            ufms.number = number
-            ufms.save()
-        except:
-            pass
+    def set_attributes(self):
+        data = d6168077734()
+        data.guid = self.data[0]
+        data.fio = self.data[1]
+        data.born_date = self.data[2]
+        data.born_place = self.data[3]
+        data.pass_num = self.data[4]
+        data.pass_date = self.data[5]
+        data.pass_issued = self.data[6]
+        data.code = self.data[7]
+        data.inn = self.data[8]
+        data.name = self.data[9]
+        data.number = self.data[10]
+        data.save()
