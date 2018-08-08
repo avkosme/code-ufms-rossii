@@ -369,3 +369,6 @@ __snapshots__/
 migrations/^[0-9].py
 .vscode
 db.sqlite3
+web/media/4826085213.csv
+web/media/6162070130.csv
+web/media/6168077734.csv

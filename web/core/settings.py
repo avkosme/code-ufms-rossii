@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ufms.apps.UfmsConfig',
-    # 'data.apps.AppConfig'
+    'data.apps.DataConfig'
 ]
 
 MIDDLEWARE = [
