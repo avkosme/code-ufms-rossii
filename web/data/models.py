@@ -59,3 +59,11 @@ class d6168077734(models.Model):
         return ' '.join(
             (self.guid, self.fio, self.born_date, self.born_place, self.pass_num, self.pass_date, self.pass_issued,
              self.code, self.inn, self.name, self.number))
+
+
+class StatisticFind(models.Model):
+    model_name = models.CharField(max_length=500)
+    id_find = models.CharField(max_length=500)
+
+    def __str__(self):
+        return ' '.join((self.model_name, self.id_find))
