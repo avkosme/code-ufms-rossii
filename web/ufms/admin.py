@@ -6,6 +6,11 @@ from ufms.models import Ufms
 
 class UfmsModelAdmin(admin.ModelAdmin):
     search_fields = ['name', 'number']
+    list_display = ('get_instance',)
+
+    @staticmethod
+    def get_instance(instance):
+        return instance
 
 
 admin.site.register(Ufms, UfmsModelAdmin)
