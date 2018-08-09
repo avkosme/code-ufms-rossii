@@ -28,7 +28,7 @@ class Fill:
         self.pass_issued_split = False
 
     def main(self):
-        datas = d4826085213.objects.filter(code__exact='')
+        datas = d6168077734.objects.filter(code__exact='')
         for self.data in datas:
             self.search()
 
@@ -64,7 +64,7 @@ class Fill:
 
     def save_statistic(self):
         statisticFind = StatisticFind()
-        statisticFind.model_name = 'd4826085213'
+        statisticFind.model_name = 'd6168077734'
         statisticFind.id_find = self.data.pk
         statisticFind.save()
 
