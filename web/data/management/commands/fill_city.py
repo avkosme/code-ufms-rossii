@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from data.models import d4826085213, d6162070130, d6168077734, StatisticFind
 from ufms.models import Ufms
+import random
 
 
 class Command(BaseCommand):
@@ -27,48 +28,60 @@ class Fill:
         self.pass_issued_split = False
 
     def main(self):
-        datas = d4826085213.objects.filter(code__exact='')
+        datas = d6162070130.objects.filter(code__exact='')
         for self.data in datas:
             self.search()
 
     def search(self):
         self.pass_issued_split = self.data.pass_issued.split(' ')
-        for r in self.pass_issued_split:
-            self.pass_issued = r.lower()
-            if self.pass_issued not in self.exclude_dict():
-                try:
-                    self.ufms = Ufms.objects.filter(name__icontains=self.pass_issued)
-                    print(self.ufms.query)
-                    self.ufms = self.ufms.all()
-                    if self.ufms:
-                        print('Совпадение!')
-                        self.save()
-                        print(self.data)
-                    else:
-                        print('Не найдено')
-                except Ufms.DoesNotExist:
-                    print('Не найдено')
+        if len(self.pass_issued_split) > 3:
+            for r in self.pass_issued_split:
+                self.pass_issued = r.lower()
+                if self.pass_issued not in self.exclude_dict():
+                    self.cut_pass_issued()
+                    if len(self.pass_issued) > 3:
+                        try:
+                            self.ufms = Ufms.objects.filter(name__icontains=self.pass_issued)
+                            print(self.ufms.query)
+                            self.ufms = self.ufms.all()
+                            if self.ufms:
+                                print('Совпадение!')
+                                self.save()
+                                print(self.data)
+                            else:
+                                print('Не найдено')
+                        except Ufms.DoesNotExist:
+                            print('Не найдено')
 
     def save(self):
-        self.data.code = self.ufms[0].number
+        self.data.code = random.choice(self.ufms).number
         self.data.save()
         self.save_statistic()
 
+    def cut_pass_issued(self):
+        self.pass_issued = self.pass_issued[2:]
+        self.pass_issued = self.pass_issued[:-2]
+
     def save_statistic(self):
         statisticFind = StatisticFind()
-        statisticFind.model_name = 'd4826085213'
+        statisticFind.model_name = 'd6162070130'
         statisticFind.id_find = self.data.pk
         statisticFind.save()
 
     def exclude_dict(self):
         return [
             'ао',
+            'окр',
+            'авт',
             'ОТДЕЛЕНИЕМ',
             'уфмс'
             'россии'
             'автоном.',
             'в',
             'внутренних',
+            'спубли',
+            'утренн',
+            'управлением',
             'г',
             'гор',
             'г.',
