@@ -28,7 +28,7 @@ class Fill:
         self.pass_issued_split = False
 
     def main(self):
-        datas = d6162070130.objects.filter(code__exact='')
+        datas = d4826085213.objects.filter(code__exact='')
         for self.data in datas:
             self.search()
 
@@ -64,13 +64,14 @@ class Fill:
 
     def save_statistic(self):
         statisticFind = StatisticFind()
-        statisticFind.model_name = 'd6162070130'
+        statisticFind.model_name = 'd4826085213'
         statisticFind.id_find = self.data.pk
         statisticFind.save()
 
     def exclude_dict(self):
         return [
             'ао',
+            'УФМС',
             'окр',
             'авт',
             'ОТДЕЛЕНИЕМ',
