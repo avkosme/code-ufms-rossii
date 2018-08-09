@@ -28,10 +28,10 @@ class Fill():
         self.count = 0
 
     def main(self):
-        datas = d6168077734.objects.all()
+        datas = d6162070130.objects.filter(code__exact='').all()
         for self.data in datas:
-            self.len_bad_pass_issued()
-        print(self.count)
+            self.search()
+
 
     def len_bad_pass_issued(self):
         self.len = len(self.data.pass_issued.split(' '))
@@ -40,7 +40,7 @@ class Fill():
 
     def search(self):
         try:
-            self.ufms = Ufms.objects.filter(name__iexact=self.data.pass_issued).all()
+            self.ufms = Ufms.objects.filter(name__icontains=self.data.pass_issued).all()
             if self.ufms:
                 print('Совпадение!')
                 self.save()
@@ -58,6 +58,6 @@ class Fill():
 
     def save_statistic(self):
         statisticFind = StatisticFind()
-        statisticFind.model_name = 'd6168077734'
+        statisticFind.model_name = 'd6162070130'
         statisticFind.id_find = self.data.pk
         statisticFind.save()
