@@ -28,7 +28,7 @@ class Fill():
         self.count = 0
 
     def main(self):
-        datas = d6162070130.objects.filter(code__exact='').all()
+        datas = d6168077734.objects.filter(code__exact='').all()
         for self.data in datas:
             self.search()
 
@@ -58,6 +58,6 @@ class Fill():
 
     def save_statistic(self):
         statisticFind = StatisticFind()
-        statisticFind.model_name = 'd6162070130'
+        statisticFind.model_name = 'd6168077734'
         statisticFind.id_find = self.data.pk
         statisticFind.save()
